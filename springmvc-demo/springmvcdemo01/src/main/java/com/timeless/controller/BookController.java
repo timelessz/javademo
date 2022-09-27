@@ -1,5 +1,7 @@
 package com.timeless.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timeless.pojo.Books;
 import com.timeless.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -60,4 +63,27 @@ public class BookController {
         bookService.deleteBookById(id);
         return "redirect:/book/allBook";
     }
+
+
+    @RequestMapping("/queryBookJson")
+    @ResponseBody
+    public String queryBookJson() throws JsonProcessingException {
+        //创建一个jackson的对象映射器，用来解析数据
+        ObjectMapper mapper = new ObjectMapper();
+        List<Books> books = bookService.queryAllBook();
+        return mapper.writeValueAsString(books);
+    }
+
+
+    @RequestMapping("/queryOneBookJson")
+    @ResponseBody
+    public String queryOneBookJson(int id) throws JsonProcessingException {
+        //创建一个jackson的对象映射器，用来解析数据
+        ObjectMapper mapper = new ObjectMapper();
+        Books books = bookService.queryBookById(id);
+        return mapper.writeValueAsString(books);
+    }
+
+
+
 }
